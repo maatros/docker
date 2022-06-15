@@ -48,12 +48,6 @@ resource "aws_nat_gateway" "docker_gateway" {
   allocation_id = element(aws_eip.docker_gateway.*.id, count.index)
 }
 
-resource "aws_nat_gateway" "docker_gateway" {
-  count         = 2
-  subnet_id     = element(aws_subnet.docker_public.*.id, count.index)
-  allocation_id = element(aws_eip.docker_gateway.*.id, count.index)
-}
-
 resource "aws_route_table" "docker_private" {
   count  = 2
   vpc_id = aws_vpc.docker_vpc.id
