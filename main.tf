@@ -109,7 +109,7 @@ resource "aws_lb_listener" "hello_world" {
 }
 
 resource "aws_ecs_task_definition" "hello_world" {
-  family                   = "hello-world-app"
+  family                   = "simple-app"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
@@ -118,10 +118,10 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "docker.io/reflectoring/aws-hello-world:latest",
+    "image": "httpd:2.4",
     "cpu": 1024,
     "memory": 2048,
-    "name": "hello-world-app",
+    "name": "simple-app",
     "networkMode": "awsvpc",
     "portMappings": [
       {
@@ -158,7 +158,7 @@ resource "aws_ecs_cluster" "docker_cluster" {
 }
 
 resource "aws_ecs_service" "hello_world" {
-  name            = "hello-world-service"
+  name            = "simple-app"
   cluster         = aws_ecs_cluster.docker_cluster.id
   task_definition = aws_ecs_task_definition.hello_world.arn
   desired_count   = var.app_count
@@ -171,7 +171,7 @@ resource "aws_ecs_service" "hello_world" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.hello_world.id
-    container_name   = "hello-world-app"
+    container_name   = "simple-app"
     container_port   = 80
   }
 
