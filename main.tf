@@ -118,7 +118,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "httpd:2.4",
+    "image": "docker.io/reflectoring/aws-hello-world:latest",
     "cpu": 1024,
     "memory": 2048,
     "name": "hello-world-app",
