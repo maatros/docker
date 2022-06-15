@@ -114,9 +114,6 @@ resource "aws_ecs_task_definition" "hello_world" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
-  runtimePlatform {
-    operating_system_family    = "LINUX"
-  } 
 
   container_definitions = <<DEFINITION
 [
