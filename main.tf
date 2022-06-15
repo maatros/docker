@@ -6,6 +6,9 @@ provider "aws" {
 data "aws_availability_zones" "available_zones" {
   state = "available"
 }
+data "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+}
 
 resource "aws_vpc" "docker_vpc" {
   cidr_block = "10.32.0.0/16"
@@ -114,7 +117,8 @@ resource "aws_ecs_task_definition" "hello_world" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
-#  execution_role_arn       = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
+  execution_role_arn       = "${data.aws_iam_role.ecs_task_execution_role.arn}"
+# arn:aws:ecs:us-east-1:718206584555:service/docker-cluster/simple-app	
 
 
 
@@ -122,7 +126,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "httpd:2.4",
+    "image": "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/hello-repository:latest",
     "cpu": 1024,
     "memory": 2048,
     "name": "simple-app",
