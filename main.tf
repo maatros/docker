@@ -125,8 +125,8 @@ resource "aws_ecs_task_definition" "hello_world" {
     "networkMode": "awsvpc",
     "portMappings": [
       {
-        "containerPort": 3000,
-        "hostPort": 3000
+        "containerPort": 80,
+        "hostPort": 80
       }
     ]
   }
@@ -140,9 +140,9 @@ resource "aws_security_group" "hello_world_task" {
 
   ingress {
     protocol        = "tcp"
-    from_port       = 3000
-    to_port         = 3000
-    security_groups = [aws_security_group.hello_world_task.id]
+    from_port       = 80
+    to_port         = 80
+    security_groups = [aws_security_group.docker_lb_sg.id]
   }
 
   egress {
@@ -172,7 +172,7 @@ resource "aws_ecs_service" "hello_world" {
   load_balancer {
     target_group_arn = aws_lb_target_group.hello_world.id
     container_name   = "hello-world-app"
-    container_port   = 3000
+    container_port   = 80
   }
 
   depends_on = [aws_lb_listener.hello_world]
