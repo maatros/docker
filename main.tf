@@ -109,27 +109,44 @@ resource "aws_lb_listener" "hello_world" {
 }
 
 resource "aws_ecs_task_definition" "hello_world" {
-  family                   = "hello-world-app"
+  family                   = "fargate-task-definition"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
+  runtimePlatform {
+    operating_system_family    = "LINUX"
+  } 
 
   container_definitions = <<DEFINITION
 [
-  {
-    "image": "service-first",
-    "cpu": 1024,
-    "memory": 2048,
-    "name": "hello-world-app",
-    "networkMode": "awsvpc",
-    "portMappings": [
-      {
-        "containerPort": 3000,
-        "hostPort": 3000
-      }
-    ]
-  }
+    { 
+        "command": [
+        "/bin/sh -c \"echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p> </div></body></html>' >  /usr/local/apache2/htdocs/index.html && httpd-foreground\""
+        ],
+        "entryPoint": [
+        "sh",
+        "-c"
+        ],
+        "essential": true,
+        "image": "httpd:2.4",
+        "logConfiguration": { 
+        "logDriver": "awslogs",
+        "options": { 
+            "awslogs-group" : "/ecs/fargate-task-definition",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "ecs"
+        }
+        },
+        "name": "sample-fargate-app",
+        "portMappings": [ 
+        { 
+            "containerPort": 80,
+            "hostPort": 80,
+            "protocol": "tcp"
+        }
+        ]
+    }
 ]
 DEFINITION
 }
