@@ -126,7 +126,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/hello-repository:latest",
+    "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/hello-repository:latest",
     "cpu": 1024,
     "memory": 2048,
     "name": "simple-app",
