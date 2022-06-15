@@ -117,10 +117,10 @@ resource "aws_ecs_task_definition" "hello_world" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
-  execution_role_arn       = "${data.aws_iam_role.ecs_task_execution_role.arn}"
+  execution_role_arn       = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
+  
+#  execution_role_arn       = "${data.aws_iam_role.ecs_task_execution_role.arn}"
 # arn:aws:ecs:us-east-1:718206584555:service/docker-cluster/simple-app	
-
-
 
 #    "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/hello-repository:latest",
   container_definitions = <<DEFINITION
