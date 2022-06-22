@@ -1,3 +1,15 @@
+terraform {
+  backend "s3" {
+    # Replace this with your bucket name!
+    bucket         = "docker-project-bucket"
+    key            = "global/s3/terraform.tfstate"
+    region         = "us-east-2"
+    # Replace this with your DynamoDB table name!
+    dynamodb_table = "docker-project-locks"
+    encrypt        = true
+  }
+}
+
 # Configure the AWS provider
 provider "aws" {
   region = "us-east-1"

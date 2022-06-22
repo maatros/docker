@@ -6,8 +6,7 @@ pipeline {
     
     parameters {
         string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
-        booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
-
+        booleanParam(name: 'destroy-build', defaultValue: false, description: 'Destroy Terraform build?')
     }    
 	
 	environment {
@@ -16,40 +15,60 @@ pipeline {
     }
 	
     stages {
-        stage('Git checkout') {
+        stage('Git checkout for S3 bucket') {
         when {
                 not {
-                    equals expected: true, actual: params.destroy
+                    equals expected: true, actual: params.destroy-build
                 }
         }
            steps{
-                git branch: 'main', credentialsId: 'Github', url: 'https://github.com/maatros/docker'
+                git branch: 'main', credentialsId: 'Github', url: 'https://github.com/maatros/docker/global/s3'
             }
         }
-        stage('Terraform format check') {
+        stage('Terraform format check for S3 bucket') {
         when {
                 not {
-                    equals expected: true, actual: params.destroy
+                    equals expected: true, actual: params.destroy-build
                 }
         }
             steps{
                 sh 'terraform fmt'
             }
         }
-        stage('Terraform Init') {
+        stage('Terraform Init for S3 bucket') {
         when {
                 not {
-                    equals expected: true, actual: params.destroy
+                    equals expected: true, actual: params.destroy-build
                 }
         }
             steps{
                 sh 'terraform init'
             }
         }
-        stage('Terraform Plan') {
+       stage('Git checkout for Docker') {
         when {
                 not {
-                    equals expected: true, actual: params.destroy
+                    equals expected: true, actual: params.destroy-build
+                }
+        }
+           steps{
+                git branch: 'main', credentialsId: 'Github', url: 'https://github.com/maatros/docker'
+            }
+        }
+        stage('Terraform Init for Docker') {
+        when {
+                not {
+                    equals expected: true, actual: params.destroy-build
+                }
+        }
+            steps{
+                sh 'terraform init'
+            }
+        }
+        stage('Terraform Plan for Docker') {
+        when {
+                not {
+                    equals expected: true, actual: params.destroy-build
                 }
         }
             steps{
@@ -59,7 +78,7 @@ pipeline {
         stage('Terraform Apply') {
         when {
                 not {
-                    equals expected: true, actual: params.destroy
+                    equals expected: true, actual: params.destroy-build
                 }
         }
             steps{
@@ -68,7 +87,7 @@ pipeline {
         }
         stage('Terraform Destroy') {
             when {
-                equals expected: true, actual: params.destroy
+                equals expected: true, actual: params.destroy-build
             }
             steps{
                 sh 'terraform destroy --auto-approve'
