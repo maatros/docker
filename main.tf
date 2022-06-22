@@ -38,8 +38,8 @@ terraform {
     # Replace this with your DynamoDB table name!
     dynamodb_table = "docker-project-locks"
     encrypt        = true
-    depends_on = [aws_s3_bucket.terraform_state,aws_dynamodb_table.terraform_locks]
   }
+  depends_on = [aws_s3_bucket.terraform_state,aws_dynamodb_table.terraform_locks]
 }
 
 data "aws_availability_zones" "available_zones" {
