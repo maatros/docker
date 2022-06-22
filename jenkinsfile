@@ -32,7 +32,7 @@ pipeline {
                 }
         }
             steps{
-                sh 'terraform init'
+                sh 'terraform init -reconfigure'
             }
         }
         stage('Terraform Plan for Docker') {
