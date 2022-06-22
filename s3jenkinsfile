@@ -15,7 +15,7 @@ pipeline {
     }
 	
     stages {
-       stage('Git checkout for Docker') {
+        stage('Git checkout for S3 bucket') {
         when {
                 not {
                     equals expected: true, actual: params.destroy
@@ -25,7 +25,17 @@ pipeline {
                 git branch: 'main', credentialsId: 'Github', url: 'https://github.com/maatros/docker'
             }
         }
-        stage('Terraform Init for Docker') {
+        stage('Terraform format check for S3 bucket') {
+        when {
+                not {
+                    equals expected: true, actual: params.destroy
+                }
+        }
+            steps{
+                sh 'terraform fmt'
+            }
+        }
+        stage('Terraform Init for S3 bucket') {
         when {
                 not {
                     equals expected: true, actual: params.destroy
@@ -35,17 +45,17 @@ pipeline {
                 sh 'terraform init'
             }
         }
-        stage('Terraform Plan for Docker') {
+        stage('Terraform Plan for S3 bucket') {
         when {
                 not {
                     equals expected: true, actual: params.destroy
                 }
         }
             steps{
-                sh 'terraform plan -var app_count=3'
+                sh 'terraform plan'
             }
         }
-        stage('Terraform Apply for Docker') {
+        stage('Terraform Apply for S3 bucket') {
         when {
                 not {
                     equals expected: true, actual: params.destroy
@@ -55,7 +65,7 @@ pipeline {
                 sh 'terraform apply --auto-approve'
             }
         }
-        stage('Terraform Destroy for Docker') {
+        stage('Terraform Destroy for S3 bucket') {
             when {
                 equals expected: true, actual: params.destroy
             }
