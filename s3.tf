@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "docker-project-bucket"
   # Enable versioning so we can see the full revision history of our state files
