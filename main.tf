@@ -29,19 +29,6 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 }
 
-terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket         = "docker-project-bucket"
-    key            = "global/s3/terraform.tfstate"
-    region         = "us-east-2"
-    # Replace this with your DynamoDB table name!
-    dynamodb_table = "docker-project-locks"
-    encrypt        = true
-  }
-  depends_on = [aws_s3_bucket.terraform_state,aws_dynamodb_table.terraform_locks]
-}
-
 data "aws_availability_zones" "available_zones" {
   state = "available"
 }
@@ -223,4 +210,16 @@ resource "aws_ecs_service" "hello_world" {
   }
 
   depends_on = [aws_lb_listener.hello_world]
+}
+
+terraform {
+  backend "s3" {
+    # Replace this with your bucket name!
+    bucket         = "docker-project-bucket"
+    key            = "global/s3/terraform.tfstate"
+    region         = "us-east-2"
+    # Replace this with your DynamoDB table name!
+    dynamodb_table = "docker-project-locks"
+    encrypt        = true
+  }
 }
