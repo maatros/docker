@@ -42,7 +42,7 @@ pipeline {
                 }
         }
             steps{
-                sh 'terraform plan -var app_count=3'
+                sh 'terraform plan'
             }
         }
         stage('Terraform Apply for Docker') {
