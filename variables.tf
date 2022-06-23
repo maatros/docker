@@ -78,12 +78,10 @@ variable "docker_application_load_balancer_security_group_egress_ports" {
   default = ["0"]
 }
 variable "docker_application_load_balancer_security_group_ingress_CIDR_blocks" {
-  type    = list(any)
-  default = ["0.0.0.0/0"]
+  default = "0.0.0.0/0"
 }
 variable "docker_application_load_balancer_security_group_egress_CIDR_blocks" {
-  type    = list(any)
-  default = ["0.0.0.0/0"]
+  default = "0.0.0.0/0"
 }
 # ----- Application Load Balancer Security Group Section END -----
 
@@ -146,8 +144,7 @@ variable "docker_task_security_group_egress_port" {
   default = 0
 }
 variable "docker_task_security_group_egress_CIDR_blocks" {
-  type    = list(any)
-  default = ["0.0.0.0/0"]
+  default = "0.0.0.0/0"
 }
 
 # ----- Docker Task Security Group Section END -----
