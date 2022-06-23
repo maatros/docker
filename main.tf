@@ -6,11 +6,11 @@ provider "aws" {
 # Remote state configured with S3 bucket
 terraform {
   backend "s3" {
-    bucket         = var.backend_bucket_name
-    key            = var.backend_key
-    region         = var.region
-    dynamodb_table = var.backend_dynamodb_table
-    encrypt        = var.backend_encrypt
+    bucket         = "docker-project-bucket"
+    key            = "global/s3/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "docker-project-locks"
+    encrypt        = true
   }
 }
 
