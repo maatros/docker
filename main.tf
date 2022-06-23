@@ -1,17 +1,28 @@
 # Configure the AWS provider
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
+}
+
+# Remote state configured with S3 bucket
+terraform {
+  backend "s3" {
+    bucket         = var.backend_bucket_name
+    key            = var.backend_key
+    region         = var.region
+    dynamodb_table = var.backend_dynamodb_table
+    encrypt        = var.backend_encrypt
+  }
 }
 
 data "aws_availability_zones" "available_zones" {
-  state = "available"
+  state = var.availability_zones_state
 }
 data "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+  name = var.task_execution_role
 }
 
 resource "aws_vpc" "docker_vpc" {
-  cidr_block = "10.32.0.0/16"
+  cidr_block = var.docker_private_subnet_CIDR
 }
 
 resource "aws_subnet" "docker_public" {
@@ -35,7 +46,7 @@ resource "aws_internet_gateway" "docker_internet_gateway" {
 
 resource "aws_route" "docker_internet_access" {
   route_table_id         = aws_vpc.docker_vpc.main_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
+  destination_cidr_block = var.route_destination
   gateway_id             = aws_internet_gateway.docker_internet_gateway.id
 }
 
@@ -56,7 +67,7 @@ resource "aws_route_table" "docker_private" {
   vpc_id = aws_vpc.docker_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.route_destination
     nat_gateway_id = element(aws_nat_gateway.docker_gateway.*.id, count.index)
   }
 }
@@ -68,46 +79,46 @@ resource "aws_route_table_association" "docker_private" {
 }
 
 resource "aws_security_group" "docker_lb_sg" {
-  name        = "docker-alb-security-group"
+  name        = var.docker_application_load_balancer_security_group_name
   vpc_id      = aws_vpc.docker_vpc.id
 
   ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = var.docker_application_load_balancer_security_group_ingress_protocols
+    from_port   = var.docker_application_load_balancer_security_group_ingress_ports
+    to_port     = var.docker_application_load_balancer_security_group_ingress_ports
+    cidr_blocks = [var.docker_application_load_balancer_security_group_ingress_CIDR_blocks]
   }
 
   egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port = var.docker_application_load_balancer_security_group_egress_ports
+    to_port   = var.docker_application_load_balancer_security_group_egress_ports
+    protocol  = var.docker_application_load_balancer_security_group_egress_protocols
+    cidr_blocks = [var.docker_application_load_balancer_security_group_egress_CIDR_blocks]
   }
 }
 
 resource "aws_lb" "docker_lb" {
-  name            = "docker-alb"
+  name            = var.docker_application_load_balancer_name
   subnets         = aws_subnet.docker_public.*.id
   security_groups = [aws_security_group.docker_lb_sg.id]
 }
 
 resource "aws_lb_target_group" "hello_world" {
-  name        = "docker-target-group"
-  port        = 80
-  protocol    = "HTTP"
+  name        = var.docker_application_load_balancer_target_group_name
+  port        = var.docker_application_load_balancer_target_group_port
+  protocol    = var.docker_application_load_balancer_target_group_protocol
   vpc_id      = aws_vpc.docker_vpc.id
-  target_type = "ip"
+  target_type = var.docker_application_load_balancer_target_group_target_type
 }
 
 resource "aws_lb_listener" "hello_world" {
   load_balancer_arn = aws_lb.docker_lb.id
-  port              = "80"
-  protocol          = "HTTP"
+  port              = var.docker_application_load_balancer_listener_port
+  protocol          = var.docker_application_load_balancer_listener_protocol
 
   default_action {
     target_group_arn = aws_lb_target_group.hello_world.id
-    type             = "forward"
+    type             = var.docker_application_load_balancer_listener_default_action_type
   }
 }
 
@@ -117,12 +128,10 @@ resource "aws_ecs_task_definition" "hello_world" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
   memory                   = 2048
-  execution_role_arn       = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
-  
-#  execution_role_arn       = "${data.aws_iam_role.ecs_task_execution_role.arn}"
-# arn:aws:ecs:us-east-1:718206584555:service/docker-cluster/simple-app	
+ #execution_role_arn       = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
+  execution_role_arn       = var.task_execution_role
 
-#    "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/hello-repository:latest",
+
   container_definitions = <<DEFINITION
 [
   {
@@ -143,34 +152,34 @@ DEFINITION
 }
 
 resource "aws_security_group" "hello_world_task" {
-  name        = "docker-task-security-group"
+  name        = var.docker_task_security_group_name
   vpc_id      = aws_vpc.docker_vpc.id
 
   ingress {
-    protocol        = "tcp"
-    from_port       = 80
-    to_port         = 80
+    protocol        = var.docker_task_security_group_ingresss_protocol
+    from_port       = var.docker_task_security_group_ingres_port
+    to_port         = var.docker_task_security_group_ingres_port
     security_groups = [aws_security_group.docker_lb_sg.id]
   }
 
   egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = var.docker_task_security_group_egress_protocol
+    from_port   = var.docker_task_security_group_egress_port
+    to_port     = var.docker_task_security_group_egress_port
+    cidr_blocks = [var.docker_task_security_group_egress_CIDR_blocks]
   }
 }
 
 resource "aws_ecs_cluster" "docker_cluster" {
-  name = "docker-cluster"
+  name = var.docker_ecs_cluster_name
 }
 
-resource "aws_ecs_service" "hello_world" {
-  name            = "simple-app"
+resource "aws_ecs_service" "hello_world_service" {
+  name            = var.docker_ecs_service_name
   cluster         = aws_ecs_cluster.docker_cluster.id
   task_definition = aws_ecs_task_definition.hello_world.arn
   desired_count   = var.app_count
-  launch_type     = "FARGATE"
+  launch_type     = var.docker_ecs_service_launch_type
 
   network_configuration {
     security_groups = [aws_security_group.hello_world_task.id]
@@ -179,21 +188,11 @@ resource "aws_ecs_service" "hello_world" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.hello_world.id
-    container_name   = "simple-app"
-    container_port   = 80
+    container_name   = var.docker_ecs_service_container_name
+    container_port   = var.docker_ecs_service_container_port
   }
 
   depends_on = [aws_lb_listener.hello_world]
 }
 
-terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket         = "docker-project-bucket"
-    key            = "global/s3/terraform.tfstate"
-    region         = "us-east-1"
-    # Replace this with your DynamoDB table name!
-    dynamodb_table = "docker-project-locks"
-    encrypt        = true
-  }
-}
+
