@@ -16,28 +16,6 @@ variable "availability_zones_state" {
   default = "available"
   
 }
-
-# ----- Backend Section BEGIN ------
-variable "backend_bucket_name" {
-  type = string
-  default = "docker-project-bucket"
-}
-
-variable "backend_key" {
-  type = string
-  default = "global/s3/terraform.tfstate"
-}
-
-variable "backend_dynamodb_table" {
-  type = string
-  default = "docker-project-locks"
-}
-variable "backend_encrypt" {
-  type = bool
-  default = true
-}
-# ----- Backend Section END -----
-
 variable "task_execution_role"{
   type = string
   default = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
@@ -93,7 +71,7 @@ variable "docker_application_load_balancer_target_group_name" {
 
 variable "docker_application_load_balancer_target_group_port" {
   type = number
-  default = "80"
+  default = 80
 }
 
 variable "docker_application_load_balancer_target_group_protocol" {
@@ -109,7 +87,7 @@ variable "docker_application_load_balancer_target_group_target_type" {
 # ----- Application Load Balancer Listener Section BEGIN -----
 variable "docker_application_load_balancer_listener_port" {
   type = number
-  default = "80"
+  default = 80
 }
 variable "docker_application_load_balancer_listener_protocol" {
   type = string
