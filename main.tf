@@ -17,9 +17,6 @@ terraform {
 data "aws_availability_zones" "available_zones" {
   state = var.availability_zones_state
 }
-data "aws_iam_role" "ecs_task_execution_role" {
-  name = var.task_execution_role
-}
 
 resource "aws_vpc" "docker_vpc" {
   cidr_block = var.docker_private_subnet_CIDR

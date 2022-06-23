@@ -43,7 +43,7 @@ variable "task_execution_role"{
   default = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
 }
 variable "docker_private_subnet_CIDR" {
-  default = "10.32.10.0/16"
+  default = "10.32.0.0/16"
 }
 variable "route_destination" {
   type = string
