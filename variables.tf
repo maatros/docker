@@ -62,20 +62,20 @@ variable "docker_application_load_balancer_name" {
 
 # ----- Application Load Balancer Security Group Section BEGIN -----
 variable "docker_application_load_balancer_security_group_ingress_protocols" {
-  type    = list(string)
-  default = ["tcp"]
+  type    = string
+  default = "tcp"
 }
 variable "docker_application_load_balancer_security_group_ingress_ports" {
-  type    = list(number)
-  default = [80]
+  type    = number
+  default = 80
 }
 variable "docker_application_load_balancer_security_group_egress_protocols" {
-  type    = list(string)
-  default = ["-1"]
+  type    = string
+  default = "-1"
 }
 variable "docker_application_load_balancer_security_group_egress_ports" {
-  type    = list(number)
-  default = [0]
+  type    = number
+  default = 0
 }
 variable "docker_application_load_balancer_security_group_ingress_CIDR_blocks" {
   default = "0.0.0.0/0"
