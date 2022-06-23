@@ -174,3 +174,23 @@ variable "docker_ecs_service_container_port" {
   default = 80
 }
 # ----- Docker ECS Service Section END -----
+
+# ----- Docker ECS Task Definition Section BEGIN -----
+
+variable "docker_ecs_task_definition_network_mode" {
+  type = string
+  default = "awsvpc"
+}
+variable "docker_ecs_task_definition_requires_compatibilities" {
+  type = string
+  default = "FARGATE"
+}
+variable "docker_ecs_task_definition_cpu" {
+  type = string
+  default = "1024"
+}
+variable "docker_ecs_task_definition_memory" {
+  type = string
+  default = "2048"
+}
+  # ----- Docker ECS Task Definition Section END -----
