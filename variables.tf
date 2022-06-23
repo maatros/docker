@@ -40,7 +40,7 @@ variable "backend_encrypt" {
 
 variable "task_execution_role"{
   type = string
-  default = "ecsTaskExecutionRole"
+  default = "arn:aws:iam::718206584555:role/ecsTaskExecutionRole"
 }
 variable "docker_private_subnet_CIDR" {
   type    = list(string)
