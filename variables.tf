@@ -34,7 +34,7 @@ variable "backend_dynamodb_table" {
 }
 variable "backend_encrypt" {
   type = bool
-  defualt = true
+  default = true
 }
 # ----- Backend Section END -----
 
