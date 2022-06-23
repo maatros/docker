@@ -20,17 +20,17 @@ variable "availability_zones_state" {
 # ----- Backend Section BEGIN ------
 variable "backend_bucket_name" {
   type = string
-  defualt = "docker-project-bucket"
+  default = "docker-project-bucket"
 }
 
 variable "backend_key" {
   type = string
-  defualt = "global/s3/terraform.tfstate"
+  default = "global/s3/terraform.tfstate"
 }
 
 variable "backend_dynamodb_table" {
   type = string
-  defualt = "docker-project-locks"
+  default = "docker-project-locks"
 }
 variable "backend_encrypt" {
   type = bool
@@ -156,7 +156,7 @@ variable "docker_task_security_group_egress_CIDR_blocks" {
 # ECS Cluster Name
 variable "docker_ecs_cluster_name" {
   type = string
-  defualt = "docker-cluster"
+  default = "docker-cluster"
 }
 
 # ----- Docker ECS Service Section BEGIN -----
