@@ -66,16 +66,16 @@ variable "docker_application_load_balancer_security_group_ingress_protocols" {
   default = ["tcp"]
 }
 variable "docker_application_load_balancer_security_group_ingress_ports" {
-  type    = list(any)
-  default = ["80"]
+  type    = list(number)
+  default = [80]
 }
 variable "docker_application_load_balancer_security_group_egress_protocols" {
   type    = list(string)
   default = ["-1"]
 }
 variable "docker_application_load_balancer_security_group_egress_ports" {
-  type    = list(any)
-  default = ["0"]
+  type    = list(number)
+  default = [0]
 }
 variable "docker_application_load_balancer_security_group_ingress_CIDR_blocks" {
   default = "0.0.0.0/0"
