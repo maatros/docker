@@ -120,7 +120,7 @@ resource "aws_lb_listener" "hello_world" {
 }
 
 resource "aws_ecs_task_definition" "hello_world" {
-  family                   = "simple-app"
+  family                   = "simple-container"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
@@ -135,7 +135,7 @@ resource "aws_ecs_task_definition" "hello_world" {
     "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/hello-repository:latest",
     "cpu": 1024,
     "memory": 2048,
-    "name": "simple-app",
+    "name": "simple-container",
     "networkMode": "awsvpc",
     "portMappings": [
       {
