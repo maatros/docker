@@ -154,7 +154,10 @@ variable "docker_ecs_service_container_port" {
 # ----- Docker ECS Service Section END -----
 
 # ----- Docker ECS Task Definition Section BEGIN -----
-
+variable "docker_ecs_task_definition_family" {
+  type = string
+  default = "simple-container"
+}
 variable "docker_ecs_task_definition_network_mode" {
   type = string
   default = "awsvpc"
