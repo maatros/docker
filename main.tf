@@ -134,6 +134,7 @@ resource "aws_ecs_task_definition" "hello_world" {
     "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/from-git-repository:latest",
     "cpu": 1024,
     "memory": 2048,
+    "essential" : "true",
     "name": "simple-container",
     "networkMode": "awsvpc",
     "portMappings": [
