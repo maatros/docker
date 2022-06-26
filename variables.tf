@@ -7,7 +7,7 @@ variable "region" {
 #Application count - how many docker instances should start
 variable "app_count" {
   type = number
-  default = 3
+  default = 4
 }
 
 #Availability Zones - use all available
