@@ -143,6 +143,10 @@ variable "docker_ecs_service_launch_type" {
   type = string
   default = "FARGATE"
 }
+variable "docker_ecs_service_force_new_deployment" {
+  type = bool
+  default = true
+}
 variable "docker_ecs_service_container_name" {
   type = string
   default = "simple-container"
@@ -151,6 +155,8 @@ variable "docker_ecs_service_container_port" {
   type = number
   default = 80
 }
+
+
 # ----- Docker ECS Service Section END -----
 
 # ----- Docker ECS Task Definition Section BEGIN -----
