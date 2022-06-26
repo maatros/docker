@@ -118,7 +118,9 @@ resource "aws_lb_listener" "hello_world" {
     type             = var.docker_application_load_balancer_listener_default_action_type
   }
 }
-
+resource "time_sleep" "wait_for_new_version_of_docker_image" {
+  create_duration = "60s"
+}
 resource "aws_ecs_task_definition" "hello_world" {
   family                   = var.docker_ecs_task_definition_family
   network_mode             = var.docker_ecs_task_definition_network_mode
@@ -126,8 +128,6 @@ resource "aws_ecs_task_definition" "hello_world" {
   cpu                      = var.docker_ecs_task_definition_cpu
   memory                   = var.docker_ecs_task_definition_memory
   execution_role_arn       = var.task_execution_role
-
-
   container_definitions = <<DEFINITION
 [
   {
@@ -145,6 +145,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   }
 ]
 DEFINITION
+  depends_on =  [time_sleep.wait_for_new_version_of_docker_image]
 }
 
 resource "aws_security_group" "hello_world_task" {
