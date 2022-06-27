@@ -161,7 +161,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   }
 ]
 DEFINITION
-  depends_on =  [time_sleep.wait_for_new_version_of_docker_image]
+
 }
 
 resource "aws_security_group" "hello_world_task" {
@@ -205,7 +205,7 @@ resource "aws_ecs_service" "hello_world_service" {
     container_name   = var.docker_ecs_service_container_name
     container_port   = var.docker_ecs_service_container_port
   }
-  depends_on = [aws_lb_listener.hello_world]
+  depends_on = [aws_lb_listener.hello_world,time_sleep.wait_for_new_version_of_docker_image]
 }
 
 
