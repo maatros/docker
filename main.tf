@@ -130,10 +130,9 @@ data "aws_ecr_image" "aws_ecr_docker_image" {
 
 resource "time_sleep" "wait_for_new_version_of_docker_image" {
   create_duration = "60s"
-  triggers {
+  triggers = {
     family = var.docker_ecs_task_definition_family
   }
-
 }
 
 # ----- This section is only for workaround purpose END -----
