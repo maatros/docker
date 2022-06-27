@@ -121,6 +121,13 @@ resource "aws_lb_listener" "hello_world" {
 resource "time_sleep" "wait_for_new_version_of_docker_image" {
   create_duration = "60s"
 }
+
+# ----- This section is only for workaround purpose BEGIN -----
+data "aws_ecr_image" "aws_ecr_docker_image" {
+  repository_name = "718206584555.dkr.ecr.us-east-1.amazonaws.com/from-git-repository"
+  image_tag       = "latest"
+}
+# ----- This section is only for workaround purpose END -----
 resource "aws_ecs_task_definition" "hello_world" {
   family                   = var.docker_ecs_task_definition_family
   network_mode             = var.docker_ecs_task_definition_network_mode
@@ -131,7 +138,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/from-git-repository:latest",
+    "image": "${data.aws_ecr_docker_image.repository_name}:${data.aws_ecr_docker_image.image_tag}@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
     "cpu": 1024,
     "memory": 2048,
     "essential" : true,

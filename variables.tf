@@ -180,4 +180,4 @@ variable "docker_ecs_task_definition_memory" {
   type = string
   default = "2048"
 }
-  # ----- Docker ECS Task Definition Section END -----
+# ----- Docker ECS Task Definition Section END -----
