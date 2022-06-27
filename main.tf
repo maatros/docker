@@ -118,9 +118,7 @@ resource "aws_lb_listener" "hello_world" {
     type             = var.docker_application_load_balancer_listener_default_action_type
   }
 }
-resource "time_sleep" "wait_for_new_version_of_docker_image" {
-  create_duration = "60s"
-}
+
 
 # ----- This section is only for workaround purpose BEGIN -----
 data "aws_ecr_image" "aws_ecr_docker_image" {
@@ -129,9 +127,18 @@ data "aws_ecr_image" "aws_ecr_docker_image" {
   image_tag       = "latest"
 
 }
+
+resource "time_sleep" "wait_for_new_version_of_docker_image" {
+  create_duration = "60s"
+  triggers {
+    family = var.docker_ecs_task_definition_family
+  }
+
+}
+
 # ----- This section is only for workaround purpose END -----
 resource "aws_ecs_task_definition" "hello_world" {
-  family                   = var.docker_ecs_task_definition_family
+  family                   = time_sleep.wait_for_new_version_of_docker_image.triggers["family"]
   network_mode             = var.docker_ecs_task_definition_network_mode
   requires_compatibilities = [var.docker_ecs_task_definition_requires_compatibilities]
   cpu                      = var.docker_ecs_task_definition_cpu
