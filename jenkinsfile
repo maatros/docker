@@ -5,7 +5,6 @@ pipeline {
     }
     
     parameters {
-        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
         booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
     }    
 	
