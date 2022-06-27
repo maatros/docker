@@ -124,7 +124,8 @@ resource "time_sleep" "wait_for_new_version_of_docker_image" {
 
 # ----- This section is only for workaround purpose BEGIN -----
 data "aws_ecr_image" "aws_ecr_docker_image" {
-  repository_name = "718206584555.dkr.ecr.us-east-1.amazonaws.com/from-git-repository"
+  registry_id = "718206584555.dkr.ecr.us-east-1.amazonaws.com"
+  repository_name = "from-git-repository"
   image_tag       = "latest"
 
 }
