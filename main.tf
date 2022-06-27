@@ -131,13 +131,13 @@ data "aws_ecr_image" "aws_ecr_docker_image" {
 resource "time_sleep" "wait_for_new_version_of_docker_image" {
   create_duration = "60s"
   triggers = {
-    family = var.docker_ecs_task_definition_family
+    image_digest = data.aws_ecr_image.aws_ecr_docker_image.image_digest
   }
 }
 
 # ----- This section is only for workaround purpose END -----
 resource "aws_ecs_task_definition" "hello_world" {
-  family                   = time_sleep.wait_for_new_version_of_docker_image.triggers["family"]
+  family                   = var.docker_ecs_task_definition_family
   network_mode             = var.docker_ecs_task_definition_network_mode
   requires_compatibilities = [var.docker_ecs_task_definition_requires_compatibilities]
   cpu                      = var.docker_ecs_task_definition_cpu
@@ -146,7 +146,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/from-git-repository:latest@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
+    "image": "718206584555.dkr.ecr.us-east-1.amazonaws.com/from-git-repository:latest@${var.time_sleep.wait_for_new_version_of_docker_image.triggers["image_digest"]}",
     "cpu": 1024,
     "memory": 2048,
     "essential" : true,
