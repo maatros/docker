@@ -187,7 +187,7 @@ resource "aws_ecs_service" "hello_world_service" {
   task_definition = aws_ecs_task_definition.hello_world.arn
   desired_count   = var.app_count
   launch_type     = var.docker_ecs_service_launch_type
-  force_new_deployment = var.docker_ecs_service_force_new_deployment
+ # force_new_deployment = var.docker_ecs_service_force_new_deployment
   network_configuration {
     security_groups = [aws_security_group.hello_world_task.id]
     subnets         = aws_subnet.docker_private.*.id
