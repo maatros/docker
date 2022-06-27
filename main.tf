@@ -134,7 +134,7 @@ resource "time_sleep" "wait_for_new_version_of_docker_image" {
 
 # ----- This section is only for workaround purpose END -----
 resource "aws_ecs_task_definition" "hello_world" {
-  family                   = var.docker_ecs_task_definition.family
+  family                   = var.docker_ecs_task_definition_family
   network_mode             = var.docker_ecs_task_definition_network_mode
   requires_compatibilities = [var.docker_ecs_task_definition_requires_compatibilities]
   cpu                      = var.docker_ecs_task_definition_cpu
