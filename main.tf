@@ -130,9 +130,6 @@ data "aws_ecr_image" "aws_ecr_docker_image" {
 
 resource "time_sleep" "wait_for_new_version_of_docker_image" {
   create_duration = "60s"
-  triggers = {
-    task_definition = aws_ecs_task_definition.hello_world.arn
-  }
 }
 
 # ----- This section is only for workaround purpose END -----
@@ -190,8 +187,7 @@ resource "aws_ecs_cluster" "docker_cluster" {
 resource "aws_ecs_service" "hello_world_service" {
   name            = var.docker_ecs_service_name
   cluster         = aws_ecs_cluster.docker_cluster.id
- # task_definition = aws_ecs_task_definition.hello_world.arn
-  task_definition = time_sleep.wait_for_new_version_of_docker_image.triggers["task_definition"]
+  task_definition = aws_ecs_task_definition.hello_world.arn
   desired_count   = var.app_count
   launch_type     = var.docker_ecs_service_launch_type
  # force_new_deployment = var.docker_ecs_service_force_new_deployment
@@ -205,7 +201,7 @@ resource "aws_ecs_service" "hello_world_service" {
     container_name   = var.docker_ecs_service_container_name
     container_port   = var.docker_ecs_service_container_port
   }
-  depends_on = [aws_lb_listener.hello_world,time_sleep.wait_for_new_version_of_docker_image]
+  depends_on = [aws_lb_listener.hello_world]
 }
 
 
