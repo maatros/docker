@@ -138,7 +138,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "${data.aws_ecr_docker_image.repository_name}:${data.aws_ecr_docker_image.image_tag}@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
+    "image": "${data.aws_ecr_image.aws_ecr_docker_image.repository_name}:${data.aws_ecr_image.aws_ecr_docker_image.image_tag}@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
     "cpu": 1024,
     "memory": 2048,
     "essential" : true,
