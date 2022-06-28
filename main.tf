@@ -125,6 +125,7 @@ data "aws_ecr_image" "aws_ecr_docker_image" {
   registry_id = 718206584555
   repository_name = "from-git-repository"
   image_tag       = "latest"
+  
 }
 
 resource "time_sleep" "wait_for_new_version_of_docker_image" {
