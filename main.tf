@@ -32,7 +32,6 @@ resource "aws_subnet" "docker_private" {
   availability_zone = data.aws_availability_zones.available_zones.names[count.index]
   vpc_id            = aws_vpc.docker_vpc.id
 }
-
 resource "aws_internet_gateway" "docker_internet_gateway" {
   vpc_id = aws_vpc.docker_vpc.id
 }
@@ -54,7 +53,6 @@ resource "aws_nat_gateway" "docker_gateway" {
 resource "aws_route_table" "docker_private" {
   count  = 2
   vpc_id = aws_vpc.docker_vpc.id
-
   route {
     cidr_block = var.route_destination
     nat_gateway_id = element(aws_nat_gateway.docker_gateway.*.id, count.index)
@@ -102,21 +100,13 @@ resource "aws_lb_listener" "hello_world" {
     type             = var.docker_application_load_balancer_listener_default_action_type
   }
 }
-# ----- This section is only for workaround purpose BEGIN -----
+# ----- Workaround for new docker image BEGIN -----
 data "aws_ecr_image" "aws_ecr_docker_image" {
   registry_id = 718206584555
   repository_name = "from-git-repository"
   image_tag       = "latest"
-  
 }
-resource "time_sleep" "wait_for_new_version_of_docker_image" {
-  create_duration = "60s"
-  triggers = {
-    "task_definition" = aws_ecs_task_definition.hello_world.arn
-  }
-  depends_on = [aws_ecs_task_definition.hello_world]
-}
-# ----- This section is only for workaround purpose END -----
+# ----- Workaround for new docker image END -----
 resource "aws_ecs_task_definition" "hello_world" {
   family                   = var.docker_ecs_task_definition_family
   network_mode             = var.docker_ecs_task_definition_network_mode
@@ -143,6 +133,15 @@ resource "aws_ecs_task_definition" "hello_world" {
 ]
 DEFINITION
 }
+# ----- Workaround for Github Action Docker image build time BEGIN -----
+resource "time_sleep" "wait_for_new_version_of_docker_image" {
+  create_duration = "60s"
+  triggers = {
+    "task_definition" = aws_ecs_task_definition.hello_world.arn
+  }
+  depends_on = [aws_ecs_task_definition.hello_world]
+}
+# ----- Workaround for Github Action Docker image build time END -----
 resource "aws_security_group" "hello_world_task" {
   name        = var.docker_task_security_group_name
   vpc_id      = aws_vpc.docker_vpc.id
@@ -166,11 +165,10 @@ resource "aws_ecs_cluster" "docker_cluster" {
 resource "aws_ecs_service" "hello_world_service" {
   name            = var.docker_ecs_service_name
   cluster         = aws_ecs_cluster.docker_cluster.id
- # task_definition = aws_ecs_task_definition.hello_world.arn
+ #task_definition = aws_ecs_task_definition.hello_world.arn
   task_definition = time_sleep.wait_for_new_version_of_docker_image.triggers["task_definition"]
   desired_count   = var.app_count
   launch_type     = var.docker_ecs_service_launch_type
- # force_new_deployment = var.docker_ecs_service_force_new_deployment
   network_configuration {
     security_groups = [aws_security_group.hello_world_task.id]
     subnets         = aws_subnet.docker_private.*.id
