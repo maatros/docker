@@ -22,7 +22,7 @@ pipeline {
                 }
         }
            steps{
-                git branch: 'main', credentialsId: 'Github', url: 'https://github.com/maatros/s3'
+                git branch: 's3', credentialsId: 'Github', url: 'https://github.com/maatros/docker'
             }
         }
         stage('Terraform format check') {
