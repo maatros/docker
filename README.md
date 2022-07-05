@@ -1,3 +1,3 @@
 # Simple CI/CD project
 
-![project](https://user-images.githubusercontent.com/107214499/176271515-00d13d68-fee4-4edf-bbe1-cebea3221b87.png)
+![DevOps Pratice](https://user-images.githubusercontent.com/107214499/177309584-2fd22a07-fc11-4bc6-87ad-4ccb8908ddf2.png)
