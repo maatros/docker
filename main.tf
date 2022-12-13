@@ -103,7 +103,7 @@ resource "aws_lb_listener" "hello_world" {
 # ----- Workaround for new docker image BEGIN -----
 data "aws_ecr_image" "aws_ecr_docker_image" {
   registry_id = 046831591010
-  repository_name = "from-git-repository"
+  repository_name = "fromgitrepository"
   image_tag       = "latest"
 }
 # ----- Workaround for new docker image END -----
@@ -117,7 +117,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "046831591010.dkr.ecr.us-east-1.amazonaws.com/from-git-repository:latest@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
+    "image": "046831591010.dkr.ecr.us-east-1.amazonaws.com/fromgitrepository:latest@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
     "cpu": 1024,
     "memory": 2048,
     "essential" : true,
