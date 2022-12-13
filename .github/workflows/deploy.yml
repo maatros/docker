@@ -55,5 +55,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Check on failures
-        if: ${{ steps.login-ecr.outcome }} == 'failure'
-          run: exit 1
+      run: exit 1
