@@ -59,11 +59,3 @@ jobs:
       run: |
         echo "credentials ${{ steps.credentials.outcome }}"
         exit 1
-      if: ${{ steps.login-ecr.outcome }} == 'failure'
-      run: |
-        echo "login ${{ steps.login-ecr.outcome }}"
-        exit 1
-      if: ${{ steps.build-image.outcome }} == 'failure' 
-      run: |
-        echo "build ${{ steps.build-image.outcome }}"
-        exit 1
