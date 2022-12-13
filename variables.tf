@@ -18,7 +18,7 @@ variable "availability_zones_state" {
 }
 variable "task_execution_role"{
   type = string
-  default = "arn:aws:iam::046831591010:role/AWSServiceRoleForECS"
+  default = "arn:aws:iam::046831591010:role/pcontrol-admin-dev-ecs-taskexecution"
 }
 variable "docker_private_subnet_CIDR" {
   default = "10.32.0.0/16"
