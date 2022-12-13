@@ -40,3 +40,13 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_TAG .
         docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
+
+    - name: Publish SNS Topic
+      uses: nothingalike/sns-publish-topic@v1.6
+      with:
+        MESSAGE: "New docker image has been pushed to ECR"
+        TOPIC_ARN: "arn:aws:sns:us-east-1:046831591010:piko-nebo-sns-topic"
+      env:
+        AWS_REGION: us-east-1
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
