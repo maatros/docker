@@ -53,3 +53,7 @@ jobs:
         AWS_REGION: us-east-1
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Check on failures
+        if: (${{ steps.credentials.outcome }} == 'failure' || ${{ steps.login-ecr.outcome }} == 'failure' || ${{ steps.build-image.outcome }} == 'failure')
+        run: exit 1
