@@ -32,6 +32,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push image to Amazon ECR
+      id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: fromgitrepositoryFAILED
@@ -45,7 +46,7 @@ jobs:
     - name: Publish SNS Topic
       uses: nothingalike/sns-publish-topic@v1.6
       with:
-        MESSAGE: "Job status: ${{ job.status }}"
+        MESSAGE: "Job status: ${{ steps.build-image.outcome }}"
         TOPIC_ARN: "arn:aws:sns:us-east-1:046831591010:piko-nebo-sns-topic"
       env:
         AWS_REGION: us-east-1
