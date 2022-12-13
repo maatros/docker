@@ -30,6 +30,7 @@ jobs:
       continue-on-error: true
 
     - name: Checking out sonar
+      id: sonar
       uses: actions/checkout@master
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
@@ -39,6 +40,12 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+    - name: Print outputs
+      run: |
+        echo "Start of outputs:"
+        echo "${{ steps.sonar.outputs }}"
+        echo "End of outputs"
+  
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
