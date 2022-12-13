@@ -55,7 +55,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Check on failures
-      if: '${{ steps.credentials.outcome }}' == 'failure'
+      if: steps.credentials.outcome == 'failure'
       run: |
         echo "credentials ${{ steps.credentials.outcome }}"
         exit 1
