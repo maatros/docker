@@ -102,7 +102,6 @@ resource "aws_lb_listener" "hello_world" {
 }
 # ----- Workaround for new docker image BEGIN -----
 data "aws_ecr_image" "aws_ecr_docker_image" {
-  registry_id = 046831591010
   repository_name = "fromgitrepository"
   image_tag       = "latest"
 }
