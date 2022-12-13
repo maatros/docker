@@ -56,11 +56,14 @@ jobs:
 
     - name: Check on failures
       if: ${{ steps.credentials.outcome }} == 'failure'
-      echo: "credentials ${{ steps.credentials.outcome }}"
-      run: exit 1
+      run: |
+        echo "credentials ${{ steps.credentials.outcome }}"
+        exit 1
       if: ${{ steps.login-ecr.outcome }} == 'failure'
-      echo: "login ${{ steps.login-ecr.outcome }}"
-      run: exit 1
-      if: ${{ steps.build-image.outcome }} == 'failure'
-      echo: "build ${{ steps.build-image.outcome }}"
-      run: exit 1
+      run: |
+        echo "login ${{ steps.login-ecr.outcome }}"
+        exit 1
+      if: ${{ steps.build-image.outcome }} == 'failure' 
+      run: |
+        echo "build ${{ steps.build-image.outcome }}"
+        exit 1
