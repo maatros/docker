@@ -46,8 +46,8 @@ jobs:
     - name: Publish SNS Topic
       uses: nothingalike/sns-publish-topic@v1.6
       with:
-        MESSAGE: "Job status: ${{ steps.login-ecr.outcome }} \
-                  Job status: ${{ steps.build-image.outcome }}"
+        MESSAGE: "Logging to to ECR: Job status: ${{ steps.login-ecr.outcome }}" \
+                 "Building docker image: ${{ steps.build-image.outcome }}"
         TOPIC_ARN: "arn:aws:sns:us-east-1:046831591010:piko-nebo-sns-topic"
       env:
         AWS_REGION: us-east-1
