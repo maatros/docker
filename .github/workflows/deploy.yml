@@ -39,12 +39,7 @@ jobs:
       uses: sonarsource/sonarcloud-github-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-    - name: Print outputs
-      run: |
-        echo "Start of outputs:"
-        echo "${{ steps.sonar.outputs }}"
-        echo "End of outputs"
+      continue-on-error: true
   
     - name: Login to Amazon ECR
       id: login-ecr
@@ -66,7 +61,7 @@ jobs:
     - name: Publish SNS Topic
       uses: nothingalike/sns-publish-topic@v1.6
       with:
-        MESSAGE: "Getting info about credentials: ${{ steps.credentials.outcome }} \nLogging to ECR: ${{ steps.login-ecr.outcome }} \nBuilding docker image: ${{ steps.build-image.outcome }}"
+        MESSAGE: "Getting info about credentials: ${{ steps.credentials.outcome }} \nScanning the code with SonarCloud: ${{ steps.sonar.outcome }} \nLogging to ECR: ${{ steps.login-ecr.outcome }} \nBuilding docker image: ${{ steps.build-image.outcome }}"
         TOPIC_ARN: "arn:aws:sns:us-east-1:046831591010:piko-nebo-sns-topic"
       env:
         AWS_REGION: us-east-1
@@ -74,6 +69,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Check on failures
-      if: steps.credentials.outcome == 'failure' || steps.login-ecr.outcome == 'failure' || steps.build-image.outcome == 'failure'
+      if: steps.credentials.outcome == 'failure' || steps.sonar.outcome == 'failure' || steps.login-ecr.outcome == 'failure' || steps.build-image.outcome == 'failure'
       run: |
         exit 1
