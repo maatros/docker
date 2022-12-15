@@ -100,6 +100,10 @@ resource "aws_lb_listener" "hello_world" {
     type             = var.docker_application_load_balancer_listener_default_action_type
   }
 }
+
+resource "aws_cloudwatch_log_group" "hello-world-log-group" {
+  name = "hello-world-log-group"
+  }
 # ----- Workaround for new docker image BEGIN -----
 data "aws_ecr_image" "aws_ecr_docker_image" {
   repository_name = "fromgitrepository"
@@ -127,7 +131,15 @@ resource "aws_ecs_task_definition" "hello_world" {
         "containerPort": 80,
         "hostPort": 80
       }
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "hello-world-log-group",
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "streaming"
+      }
+    }
   }
 ]
 DEFINITION
