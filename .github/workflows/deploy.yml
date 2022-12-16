@@ -61,7 +61,7 @@ jobs:
     - name: Publish SNS Topic
       uses: nothingalike/sns-publish-topic@v1.6
       with:
-        MESSAGE: "Getting info about credentials: ${{ steps.credentials.outcome }}\r\nScanning the code with SonarCloud: ${{ steps.sonar.outcome }}\r\nLogging to ECR: ${{ steps.login-ecr.outcome }} Building docker image: ${{ steps.build-image.outcome }}"
+        MESSAGE: "Getting info about credentials: ${{ steps.credentials.outcome }} \nScanning the code with SonarCloud: ${{ steps.sonar.outcome }} \nLogging to ECR: ${{ steps.login-ecr.outcome }} \nBuilding docker image: ${{ steps.build-image.outcome }}"
         TOPIC_ARN: "arn:aws:sns:us-east-1:046831591010:piko-nebo-sns-topic"
       env:
         AWS_REGION: us-east-1
