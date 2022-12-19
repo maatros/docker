@@ -188,21 +188,3 @@ resource "aws_ecs_service" "hello_world_service" {
   }
   depends_on = [aws_lb_listener.hello_world,time_sleep.wait_for_new_version_of_docker_image]
 }
-
-resource "aws_cloudwatch_log_group" "hello-world-log-group" {
-  name = "hello-world-log-group"
-  }
-resource "aws_cloudwatch_metric_alarm" "docker-ecs-alarm" {
-  alarm_name          = "docker-ecs-alarm"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/ECS"
-  period              = "120"
-  statistic           = "Average"
-  threshold           = "50"
-
-  dimensions = {
-    ClusterName = var.docker_ecs_cluster_name
-  }
-}
