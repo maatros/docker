@@ -8,7 +8,7 @@ terraform {
   backend "s3" {
     bucket         = "piko-nebo-docker-project-bucket"
     key            = "global/s3/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-north-1"
     dynamodb_table = "piko-nebo-docker-project-locks"
     encrypt        = true
   }
