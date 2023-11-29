@@ -64,7 +64,7 @@ jobs:
         MESSAGE: "--- Getting info about credentials: ${{ steps.credentials.outcome }}\n--- Scanning the code with SonarCloud: ${{ steps.sonar.outcome }}\n--- Logging to ECR: ${{ steps.login-ecr.outcome }}\n--- Building docker image: ${{ steps.build-image.outcome }}"
         TOPIC_ARN: "arn:aws:sns:eu-north-1:737473224894:piko-nebo-sns-topic"
       env:
-        AWS_REGION: us-east-1
+        AWS_REGION: eu-north-1
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
