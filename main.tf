@@ -188,3 +188,4 @@ resource "aws_ecs_service" "hello_world_service" {
   }
   depends_on = [aws_lb_listener.hello_world,time_sleep.wait_for_new_version_of_docker_image]
 }
+# Adding empty comment
