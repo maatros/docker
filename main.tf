@@ -117,7 +117,7 @@ resource "aws_ecs_task_definition" "hello_world" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "046831591010.dkr.ecr.us-east-1.amazonaws.com/fromgitrepository:latest@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
+    "image": "737473224894.dkr.ecr.eu-north-1.amazonaws.com/fromgitrepository:latest@${data.aws_ecr_image.aws_ecr_docker_image.image_digest}",
     "cpu": 1024,
     "memory": 2048,
     "essential" : true,
@@ -133,7 +133,7 @@ resource "aws_ecs_task_definition" "hello_world" {
       "logDriver": "awslogs",
       "options": {
         "awslogs-group": "hello-world-log-group",
-        "awslogs-region": "us-east-1",
+        "awslogs-region": "eu-north-1",
         "awslogs-stream-prefix": "streaming"
       }
     }
